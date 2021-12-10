@@ -1,0 +1,55 @@
+﻿@model  SECURETEST.Models.ReportModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<h2>Index</h2>
+<style>
+    .custom-style {
+        padding: 10px;
+        margin: 10px;
+        width: 97%;
+        display: flex;
+    }
+
+        .custom-style input {
+            flex: 1
+        }
+
+        .custom-style button {
+            width: 80px;
+        }
+</style>
+@using (Html.BeginForm("ExportReport", "Report", FormMethod.Post, new { @class = "ReportSubmitForm", target = "_blank" }))
+{
+    <body>
+        <div class="custom-style">
+            @Html.TextBoxFor(x=>x.ItemName,new { @class = "form-control", @id = "searchInput" })
+            <button type="button" class="btn btn-info btnReport">Search</button>
+        </div>
+    </body>
+}
+<script>
+     $("#searchInput").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetSaleItems", "Sale")',
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.itemName, value: item.itemName };
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+     });
+        $(".btnReport").click(function () {
+            $(".ReportSubmitForm").submit();
+        });
+</script>

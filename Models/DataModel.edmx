@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SECURESOFTModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="SALE">
+          <Key>
+            <PropertyRef Name="INVOICE_NO" />
+          </Key>
+          <Property Name="INVOICE_NO" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DATE" Type="date" />
+          <Property Name="CUSTOMER_MOBILE" Type="nvarchar" MaxLength="50" />
+          <Property Name="TOTAL_AMOUNT" Type="numeric" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="SALE_REPO">
+          <Key>
+            <PropertyRef Name="SALE_ID" />
+          </Key>
+          <Property Name="SALE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SALE_INVOICE" Type="nvarchar" MaxLength="255" />
+          <Property Name="ITEM_ID" Type="int" />
+          <Property Name="QUANTITY" Type="int" />
+          <Property Name="SALE_PRICE" Type="numeric" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="STOCK">
+          <Key>
+            <PropertyRef Name="ITEM_ID" />
+          </Key>
+          <Property Name="ITEM_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PURCHASE_PRICE" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="ITEM_NAME" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_INVOICE">
+          <End Role="SALE" Type="Self.SALE" Multiplicity="0..1" />
+          <End Role="SALE_REPO" Type="Self.SALE_REPO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SALE">
+              <PropertyRef Name="INVOICE_NO" />
+            </Principal>
+            <Dependent Role="SALE_REPO">
+              <PropertyRef Name="SALE_INVOICE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_STOCK">
+          <End Role="STOCK" Type="Self.STOCK" Multiplicity="0..1" />
+          <End Role="SALE_REPO" Type="Self.SALE_REPO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="STOCK">
+              <PropertyRef Name="ITEM_ID" />
+            </Principal>
+            <Dependent Role="SALE_REPO">
+              <PropertyRef Name="ITEM_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SECURESOFTModelStoreContainer">
+          <EntitySet Name="SALE" EntityType="Self.SALE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SALE_REPO" EntityType="Self.SALE_REPO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="STOCK" EntityType="Self.STOCK" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_INVOICE" Association="Self.FK_INVOICE">
+            <End Role="SALE" EntitySet="SALE" />
+            <End Role="SALE_REPO" EntitySet="SALE_REPO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_STOCK" Association="Self.FK_STOCK">
+            <End Role="STOCK" EntitySet="STOCK" />
+            <End Role="SALE_REPO" EntitySet="SALE_REPO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SECURESOFTModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="SALE">
+          <Key>
+            <PropertyRef Name="INVOICE_NO" />
+          </Key>
+          <Property Name="INVOICE_NO" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DATE" Type="DateTime" Precision="0" />
+          <Property Name="CUSTOMER_MOBILE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TOTAL_AMOUNT" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="SALE_REPO" Relationship="Self.FK_INVOICE" FromRole="SALE" ToRole="SALE_REPO" />
+        </EntityType>
+        <EntityType Name="SALE_REPO">
+          <Key>
+            <PropertyRef Name="SALE_ID" />
+          </Key>
+          <Property Name="SALE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SALE_INVOICE" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ITEM_ID" Type="Int32" />
+          <Property Name="QUANTITY" Type="Int32" />
+          <Property Name="SALE_PRICE" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="SALE" Relationship="Self.FK_INVOICE" FromRole="SALE_REPO" ToRole="SALE" />
+          <NavigationProperty Name="STOCK" Relationship="Self.FK_STOCK" FromRole="SALE_REPO" ToRole="STOCK" />
+        </EntityType>
+        <EntityType Name="STOCK">
+          <Key>
+            <PropertyRef Name="ITEM_ID" />
+          </Key>
+          <Property Name="ITEM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PURCHASE_PRICE" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ITEM_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SALE_REPO" Relationship="Self.FK_STOCK" FromRole="STOCK" ToRole="SALE_REPO" />
+        </EntityType>
+        <Association Name="FK_INVOICE">
+          <End Role="SALE" Type="Self.SALE" Multiplicity="0..1" />
+          <End Role="SALE_REPO" Type="Self.SALE_REPO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SALE">
+              <PropertyRef Name="INVOICE_NO" />
+            </Principal>
+            <Dependent Role="SALE_REPO">
+              <PropertyRef Name="SALE_INVOICE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_STOCK">
+          <End Role="STOCK" Type="Self.STOCK" Multiplicity="0..1" />
+          <End Role="SALE_REPO" Type="Self.SALE_REPO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="STOCK">
+              <PropertyRef Name="ITEM_ID" />
+            </Principal>
+            <Dependent Role="SALE_REPO">
+              <PropertyRef Name="ITEM_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SECURESOFT" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="SALEs" EntityType="Self.SALE" />
+          <EntitySet Name="SALE_REPO" EntityType="Self.SALE_REPO" />
+          <EntitySet Name="STOCKs" EntityType="Self.STOCK" />
+          <AssociationSet Name="FK_INVOICE" Association="Self.FK_INVOICE">
+            <End Role="SALE" EntitySet="SALEs" />
+            <End Role="SALE_REPO" EntitySet="SALE_REPO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_STOCK" Association="Self.FK_STOCK">
+            <End Role="STOCK" EntitySet="STOCKs" />
+            <End Role="SALE_REPO" EntitySet="SALE_REPO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SECURESOFTModelStoreContainer" CdmEntityContainer="SECURESOFT">
+          <EntitySetMapping Name="SALEs">
+            <EntityTypeMapping TypeName="SECURESOFTModel.SALE">
+              <MappingFragment StoreEntitySet="SALE">
+                <ScalarProperty Name="INVOICE_NO" ColumnName="INVOICE_NO" />
+                <ScalarProperty Name="DATE" ColumnName="DATE" />
+                <ScalarProperty Name="CUSTOMER_MOBILE" ColumnName="CUSTOMER_MOBILE" />
+                <ScalarProperty Name="TOTAL_AMOUNT" ColumnName="TOTAL_AMOUNT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SALE_REPO">
+            <EntityTypeMapping TypeName="SECURESOFTModel.SALE_REPO">
+              <MappingFragment StoreEntitySet="SALE_REPO">
+                <ScalarProperty Name="SALE_ID" ColumnName="SALE_ID" />
+                <ScalarProperty Name="SALE_INVOICE" ColumnName="SALE_INVOICE" />
+                <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+                <ScalarProperty Name="SALE_PRICE" ColumnName="SALE_PRICE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="STOCKs">
+            <EntityTypeMapping TypeName="SECURESOFTModel.STOCK">
+              <MappingFragment StoreEntitySet="STOCK">
+                <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+                <ScalarProperty Name="PURCHASE_PRICE" ColumnName="PURCHASE_PRICE" />
+                <ScalarProperty Name="ITEM_NAME" ColumnName="ITEM_NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

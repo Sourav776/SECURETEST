@@ -1,0 +1,50 @@
+﻿@model SECURETEST.Models.SALE_REPO
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SALE_REPO</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.QUANTITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QUANTITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SALE_PRICE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SALE_PRICE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SALE.CUSTOMER_MOBILE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SALE.CUSTOMER_MOBILE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.STOCK.ITEM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOCK.ITEM_NAME)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SALE_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
